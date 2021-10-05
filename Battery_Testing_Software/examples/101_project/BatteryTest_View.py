@@ -69,11 +69,15 @@ class MonitorWindow(MonitorWindowBase):
         self.target_voltage = 0
         self.target_current = 0
         self.target_resistance = 512
+        self.supply_voltage = 0
+        self.supply_current = 0
         self.out_voltage = self.target_voltage
 
         self.shunt_resistance = 0.24
 
         self.max_test_time = 0
+
+        self.pin0_state = 0
 
     def set_graph(self):
         """Initialize setting for graphs"""
@@ -141,6 +145,14 @@ class MonitorWindow(MonitorWindowBase):
 
     def set_max_test_current(self, current):
         self.logger.debug('Max Test Current: ' + str(current))
+
+    def set_output_voltage(self, voltage):
+        self.supply_voltage = voltage
+        self.logger.debug("Supply: " + str(round(voltage, 3)) + " V")
+
+    def set_current(self, current):
+        self.supply_current = current
+        self.logger.debug("Current: " + str(round(current, 3)) + " mA")
 
     # GUI Actions
 
@@ -229,6 +241,14 @@ class MonitorWindow(MonitorWindowBase):
             self.test_type = 1
         self.logger.debug('Charge (0) / Discharge (1) / Impedance (2): ' + str(self.test_type))
 
+    def toggle_pin_0(self,):
+        if self.pin0_state == 0:
+            self.pin0_state = 1
+        else:
+            self.pin0_state = 0
+        self.logger.debug(f'Toggle pin 0 to {self.pin0_state}')
+        self.operator.write_digital(self.pin0_state, 0)
+
     def confirmation_box(self, message):  # TODO: Not an abstract method
         """
         Pop-up box for confirming an action.
@@ -297,6 +317,29 @@ class MonitorWindow(MonitorWindowBase):
             self.test_config = ruamel.yaml.safe_load(f)
         self.test_config['config_file'] = filename
         self.update_parameters()
+
+    def set_supply_voltage(self, voltage):
+        if 0 <= voltage <= 30:
+            # Correction output value
+            if voltage <= 0.05:
+                voltage = 0
+            elif voltage <= 29.95:
+                voltage += 0.05
+            self.operator.pps_out(0, voltage/6)
+        else:
+            self.logger.warning("Supply voltage is out of range")
+
+    def set_supply_current(self, current):
+        if 0 <= current <= 4500:
+            # Correction output value
+            if current <= 15:
+                current = 0
+            elif current <= 4985:
+                current += 15
+            self.operator.pps_out(0, current/1000)
+        else:
+            self.logger.warning("Supply current is out of range")
+
 
     # Custom Methods for Test Actions
 
@@ -447,8 +490,9 @@ class MonitorWindow(MonitorWindowBase):
             self.stop_test_button()
 
         # TODO: implement discharge function
-        if self.test_type == 0:     # If Charge (0) / Discharge (1) / Impedance (2) mode is selected
-            if self.test_selection == 0:    # If CV (0) / CC (1) / CR (2) test is selected
+        '''
+        if self.test_type == 0:  # If Charge(0)/Discharge(1) mode is selected
+            if self.test_selection == 0:  # TODO: implement discharge function
                 self.run_cv_charge_test(self.target_voltage)
             elif self.test_selection == 1:  # If CV (0) / CC (1) / CR (2) test is selected
                 self.run_cc_charge_test(self.target_current)
@@ -459,6 +503,10 @@ class MonitorWindow(MonitorWindowBase):
 
         elif self.test_type == 2:   # If Charge (0) / Discharge (1) / Impedance (2) mode is selected
             self.run_impedance_test()
+        '''
+
+        # self.set_supply_voltage(self.supply_voltage)
+        self.set_supply_current(self.supply_current)
 
         if self.monitor_thread.isFinished():
             self.logger.debug('Monitor thread is finished')
@@ -500,6 +548,9 @@ if __name__ == "__main__":
     logging.info('Connecting to AD2 Device')
     # To use with real device
     from Battery_Testing_Software.labphew.controller.digilent.waveforms import DfwController
+    from time import sleep
+    from datetime import datetime
+    import pandas as pd
 
     # To test with simulated device
     # from labphew.controller.digilent.waveforms import SimulatedDfwController as DfwController
@@ -523,3 +574,25 @@ if __name__ == "__main__":
     gui = MonitorWindow(opr)
     gui.show()
     sys.exit(app.exec_())
+
+    sleep(1.5)
+    resistance = 0.47
+    data = []
+
+    #print("Current Time =", current_time)
+    for _ in range (1000):
+
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        (voltage_1, voltage_2) = opr.analog_in()
+        current = voltage_1 / resistance
+        voltage = voltage_2
+
+        data.append([current_time, voltage, current])
+        print(f"{current_time}, {voltage=:.3f} V, {current=:.3f} A")
+        sleep(1.0)
+
+
+    opr.write_digital(1, 0)
+    sleep(3.0)
+    pd.DataFrame(data).to_csv(r"C:\Users\nelfy\FAIR-Battery\Battery_Testing_Software\test.csv")
