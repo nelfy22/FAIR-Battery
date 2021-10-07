@@ -71,9 +71,10 @@ class MonitorWindow(MonitorWindowBase):
         self.target_resistance = 512
         self.supply_voltage = 0
         self.supply_current = 0
+        self.target_resistor_bank = None
         self.out_voltage = self.target_voltage
 
-        self.shunt_resistance = 0.24
+        self.shunt_resistance = 0.25
 
         self.max_test_time = 0
 
@@ -83,6 +84,7 @@ class MonitorWindow(MonitorWindowBase):
         """Initialize setting for graphs"""
         self.graphicsView.setBackground('k')
         self.plot1 = self.graphicsView.addPlot()
+        self.plot1.setYRange(self.min_test_voltage,self.max_test_voltage)
         self.plot1.setLabel('bottom', 'Time', units='s')
         self.plot1.setLabel('left', 'Voltage', units='V')
         self.curve1 = self.plot1.plot(pen='y')
@@ -153,6 +155,10 @@ class MonitorWindow(MonitorWindowBase):
     def set_current(self, current):
         self.supply_current = current
         self.logger.debug("Current: " + str(round(current, 3)) + " mA")
+
+    def set_resistor_bank(self, resistance):
+        self.target_resistor_bank = resistance
+        self.logger.debug(f"Target resistance: {resistance:.2f} Ω")
 
     # GUI Actions
 
@@ -361,6 +367,7 @@ class MonitorWindow(MonitorWindowBase):
         self.shunt_resistance = self.test_config['hardware']['shunt_resistance']
         self.operator._set_monitor_time_step(self.test_config['test']['time_step'])
         self.operator._set_monitor_plot_points(self.test_config['test']['plot_points'])
+
         self.logger.debug('Parameters Updated')
 
     def run_cv_charge_test(self, voltage, increment=0.01, margin=0):
@@ -420,6 +427,35 @@ class MonitorWindow(MonitorWindowBase):
         for pin in pins:        # Turn desired pins on
             self.operator.write_digital(1, pin)
 
+    def configure_resistor_bank(self, resistance):
+        shunt = 0.25
+        resistor_count = 7
+        max_resistance = 128
+
+        if resistance is None:
+            for pin in range(resistor_count):
+                self.operator.write_digital(0, pin)
+            return None
+
+        bank_resistance = resistance - shunt
+        conductivity = 1 / bank_resistance
+        code = round(conductivity * max_resistance)
+        pin_states = [(code >> y) & 1 for y in range(resistor_count)]
+        for pin, state in enumerate(pin_states):
+            self.operator.write_digital(state, pin)
+            # self.logger.debug(f"setting pin {pin} to {state}")
+
+        real_resistances = [129.3, 61.75, 32.9, 15.9, 8.16, 3.92, 1.99]
+        closest_resistance = 1 / (sum([state * (1 / r) for state, r in zip(pin_states, real_resistances)])) + shunt
+        # self.logger.info(f"Set resistor bank to {closest_resistance:.2f} Ω")
+        return closest_resistance
+
+    def switch_charge_discharge(self, state):
+        # state: target (0: discharge, 1: charge)
+
+        self.operator.write_digital(state, 7)
+        self.charge_mode = state
+
     def run_cc_discharge_test(self, current):   # TODO: Implement CC discharge
         pass
 
@@ -466,14 +502,17 @@ class MonitorWindow(MonitorWindowBase):
         from datetime import timedelta
         if self.operator._new_monitor_data:
             self.operator._new_monitor_data = False
+            battery_voltage = self.operator.analog_monitor_2[-1]
+            other_voltage = self.operator.analog_monitor_1[-1]
+            runtime = self.operator.analog_monitor_time[-1]
             self.curve1.setData(self.operator.analog_monitor_time, self.operator.analog_monitor_1)
-            self.label_1.setValue(self.operator.analog_monitor_1[-1])
-            self.measured_voltage_lineedit.setText(str(round(self.operator.analog_monitor_2[-1], 2)))
-            shunt_voltage = self.operator.analog_monitor_2[-1] - self.operator.analog_monitor_1[-1]
+            self.label_1.setValue(other_voltage)
+            self.measured_voltage_lineedit.setText(str(round(battery_voltage, 2)))
+            shunt_voltage = battery_voltage - other_voltage
             shunt_voltage = shunt_voltage if shunt_voltage > 0 else 0
             self.current = round((shunt_voltage / self.shunt_resistance) * 1000, 2)
             self.measured_current_lineedit.setText(str(self.current))
-            time_elapsed = timedelta(seconds=round(self.operator.analog_monitor_time[-1], 1))
+            time_elapsed = timedelta(seconds=round(runtime, 1))
 
             timestr = str(time_elapsed).split('.')  # TODO: this section needs a one-liner
             if len(timestr) == 1:
@@ -482,9 +521,14 @@ class MonitorWindow(MonitorWindowBase):
                 timestr[1] = timestr[1][0:2]
             self.time_elapsed_value.setText(".".join(timestr))
 
-            self.buffer_time = np.append(self.buffer_time, self.operator.analog_monitor_time[-1])
-            self.buffer_voltage = np.append(self.buffer_voltage, self.operator.analog_monitor_1[-1])
+            self.buffer_time = np.append(self.buffer_time, runtime)
+            self.buffer_voltage = np.append(self.buffer_voltage, battery_voltage)
             self.buffer_current = np.append(self.buffer_current, self.current)
+
+            if battery_voltage < self.min_test_voltage:
+                self.switch_charge_discharge(1)
+            elif battery_voltage > self.max_test_voltage:
+                self.switch_charge_discharge(0)
 
         if time() >= self.end_time:
             self.stop_test_button()
@@ -507,6 +551,9 @@ class MonitorWindow(MonitorWindowBase):
 
         # self.set_supply_voltage(self.supply_voltage)
         self.set_supply_current(self.supply_current)
+        self.configure_resistor_bank(self.target_resistor_bank)
+
+
 
         if self.monitor_thread.isFinished():
             self.logger.debug('Monitor thread is finished')
@@ -541,7 +588,7 @@ class MonitorWindow(MonitorWindowBase):
 
 
 if __name__ == "__main__":
-    import Battery_Testing_Software.labphew  # import this to use labphew style logging
+    # import Battery_Testing_Software.labphew  # import this to use labphew style logging
     import sys
     from PyQt5.QtWidgets import QApplication
 
@@ -561,7 +608,8 @@ if __name__ == "__main__":
         logging.info(str(err) + "Could not connect to AD2 Device. Exiting...")
         exit(-1)
     opr = Operator(instrument)  # Create operator instance
-    opr.load_config()
+    filename = os.path.join(Battery_Testing_Software.package_path, 'examples', '101_project', 'config.yml')
+    opr.load_config(filename)
 
     import platform
     if platform.system() == 'Darwin':
@@ -575,12 +623,14 @@ if __name__ == "__main__":
     gui.show()
     sys.exit(app.exec_())
 
+    gui.configure_resistor_bank(30)
+
     sleep(1.5)
     resistance = 0.47
     data = []
 
-    #print("Current Time =", current_time)
-    for _ in range (1000):
+    # print("Current Time =", current_time)
+    for _ in range(1000):
 
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
@@ -591,7 +641,6 @@ if __name__ == "__main__":
         data.append([current_time, voltage, current])
         print(f"{current_time}, {voltage=:.3f} V, {current=:.3f} A")
         sleep(1.0)
-
 
     opr.write_digital(1, 0)
     sleep(3.0)
