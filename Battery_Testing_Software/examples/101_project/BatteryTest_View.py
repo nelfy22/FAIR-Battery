@@ -84,7 +84,7 @@ class MonitorWindow(MonitorWindowBase):
         """Initialize setting for graphs"""
         self.graphicsView.setBackground('k')
         self.plot1 = self.graphicsView.addPlot()
-        self.plot1.setYRange(self.min_test_voltage,self.max_test_voltage)
+        self.plot1.setYRange(1, 1.5)
         self.plot1.setLabel('bottom', 'Time', units='s')
         self.plot1.setLabel('left', 'Voltage', units='V')
         self.curve1 = self.plot1.plot(pen='y')
