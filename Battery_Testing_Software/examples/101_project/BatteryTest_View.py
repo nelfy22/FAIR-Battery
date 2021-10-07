@@ -47,7 +47,7 @@ class MonitorWindow(MonitorWindowBase):
         self.logger.info('Loading UI Elements')
         logging.disable(logging.DEBUG)  # Disable logging for UI Setup
         p = os.path.dirname(__file__)
-        uic.loadUi(os.path.join(p, 'UI/BatteryTesterUI.ui'), self)
+        uic.loadUi(os.path.join(p, 'UI/BatteryChargerUI.ui'), self)
         logging.disable(logging.NOTSET)  # Re-enable logging
         # For Initializing UI
         self.set_graph()
