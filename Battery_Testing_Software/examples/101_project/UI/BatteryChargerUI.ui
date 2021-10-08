@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>914</width>
-    <height>759</height>
+    <height>816</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -318,7 +318,10 @@
                   <bool>true</bool>
                  </property>
                  <property name="maximum">
-                  <double>400.000000000000000</double>
+                  <double>400000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>10.000000000000000</double>
                  </property>
                 </widget>
                </item>
@@ -466,6 +469,9 @@
                  <property name="maximum">
                   <double>130.250000000000000</double>
                  </property>
+                 <property name="value">
+                  <double>100.000000000000000</double>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -524,12 +530,12 @@
                <item row="2" column="0">
                 <widget class="QLabel" name="label_5">
                  <property name="text">
-                  <string>Impedance (Ohms):</string>
+                  <string>Resistance (Ohms):</string>
                  </property>
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QLineEdit" name="measured_impedance_lineedit"/>
+                <widget class="QLineEdit" name="resistor_bank_lineedit"/>
                </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="label_30">
@@ -554,6 +560,20 @@
                </item>
                <item row="4" column="1">
                 <widget class="QLineEdit" name="measured_capacity_lineedit">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>State</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="charge_state_lineedit">
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -1090,8 +1110,8 @@
    <slot>set_target_current()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>186</y>
+     <x>272</x>
+     <y>181</y>
     </hint>
     <hint type="destinationlabel">
      <x>400</x>
@@ -1106,8 +1126,8 @@
    <slot>set_target_resistance()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>186</y>
+     <x>340</x>
+     <y>181</y>
     </hint>
     <hint type="destinationlabel">
      <x>385</x>
@@ -1122,8 +1142,8 @@
    <slot>set_min_frequency()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>150</y>
+     <x>265</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
      <x>397</x>
@@ -1138,8 +1158,8 @@
    <slot>set_min_frequency()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>150</y>
+     <x>265</x>
+     <y>175</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -1154,8 +1174,8 @@
    <slot>set_steps_per_decade()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>150</y>
+     <x>265</x>
+     <y>205</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>

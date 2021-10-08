@@ -65,12 +65,15 @@ class MonitorWindow(MonitorWindowBase):
         self.charge_mode = 0    # Whether to Charge or Discharge: Charge (T) / Discharge (F)
         self.test_type = 0  # Charge (0) / Discharge (1) / Impedance (2)
         self.end_time = 0
+        self.current = 0
 
         self.target_voltage = 0
         self.target_current = 0
         self.target_resistance = 512
         self.supply_voltage = 0
         self.supply_current = 0
+        self.min_test_voltage = 1.0
+        self.max_test_voltage = 1.5
         self.target_resistor_bank = None
         self.out_voltage = self.target_voltage
 
@@ -183,10 +186,10 @@ class MonitorWindow(MonitorWindowBase):
                 # Disable UI Elements
                 self.start_button.setEnabled(False)
                 self.reset_button.setEnabled(False)
-                self.charge_radiobutton.setEnabled(False)
-                self.discharge_radiobutton.setEnabled(False)
+                # self.charge_radiobutton.setEnabled(False)
+                # self.discharge_radiobutton.setEnabled(False)
                 self.target_selection_tabs.setEnabled(False)
-                self.test_mode_tabs.setEnabled(False)
+                # self.test_mode_tabs.setEnabled(False)
                 self.target_voltage_spinbox.setEnabled(False)
                 self.target_current_spinbox.setEnabled(False)
                 self.target_resistance_spinbox.setEnabled(False)
@@ -245,6 +248,8 @@ class MonitorWindow(MonitorWindowBase):
             self.test_type = 0
         elif not charge_mode:
             self.test_type = 1
+
+        self.switch_charge_discharge(int(charge_mode))
         self.logger.debug('Charge (0) / Discharge (1) / Impedance (2): ' + str(self.test_type))
 
     def toggle_pin_0(self,):
@@ -455,6 +460,8 @@ class MonitorWindow(MonitorWindowBase):
 
         self.operator.write_digital(state, 7)
         self.charge_mode = state
+        self.charge_radiobutton.setChecked(state)
+        self.discharge_radiobutton.setChecked(not state)
 
     def run_cc_discharge_test(self, current):   # TODO: Implement CC discharge
         pass
@@ -493,6 +500,11 @@ class MonitorWindow(MonitorWindowBase):
         self.plot_points_spinbox.setValue(self.operator.properties['monitor']['plot_points'])
         set_spinbox_stepsize(self.plot_points_spinbox)
 
+    def cc_discharge_set_resistance(self, current):
+        battery_voltage = self.operator.analog_monitor_2[-1]
+        target_resistance = battery_voltage / (current / 1000)
+        return self.configure_resistor_bank(target_resistance)
+
     def update_monitor(self):
         """
         Checks if new data is available and updates the graph.
@@ -509,10 +521,11 @@ class MonitorWindow(MonitorWindowBase):
             self.label_1.setValue(other_voltage)
             self.measured_voltage_lineedit.setText(str(round(battery_voltage, 2)))
             shunt_voltage = battery_voltage - other_voltage
-            shunt_voltage = shunt_voltage if shunt_voltage > 0 else 0
-            self.current = round((shunt_voltage / self.shunt_resistance) * 1000, 2)
-            self.measured_current_lineedit.setText(str(self.current))
-            time_elapsed = timedelta(seconds=round(runtime, 1))
+            self.current = (shunt_voltage / self.shunt_resistance) * 1000
+            self.measured_current_lineedit.setText(str(round(self.current, 2)))
+            time_elapsed = timedelta(seconds=runtime)
+
+            # TODO FIXME: Correct constant offset of each voltage channel
 
             timestr = str(time_elapsed).split('.')  # TODO: this section needs a one-liner
             if len(timestr) == 1:
@@ -529,6 +542,8 @@ class MonitorWindow(MonitorWindowBase):
                 self.switch_charge_discharge(1)
             elif battery_voltage > self.max_test_voltage:
                 self.switch_charge_discharge(0)
+
+            self.charge_state_lineedit.setText("Charging" if self.charge_mode == 1 else "Discharging")
 
         if time() >= self.end_time:
             self.stop_test_button()
@@ -549,11 +564,17 @@ class MonitorWindow(MonitorWindowBase):
             self.run_impedance_test()
         '''
 
+        set_r = -1
+        if self.charge_mode == 0:  # Discharge
+            set_r = self.cc_discharge_set_resistance(self.supply_current)  # We also use the supply current for discharging
+        elif self.charge_mode == 1:  # Charge
+            self.set_supply_current(self.supply_current)
+
+        self.resistor_bank_lineedit.setText(f"{set_r:.1f}")
+
         # self.set_supply_voltage(self.supply_voltage)
-        self.set_supply_current(self.supply_current)
-        self.configure_resistor_bank(self.target_resistor_bank)
-
-
+        # self.set_supply_current(self.supply_current)
+        # self.configure_resistor_bank(self.target_resistor_bank)
 
         if self.monitor_thread.isFinished():
             self.logger.debug('Monitor thread is finished')
