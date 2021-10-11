@@ -65,17 +65,18 @@ class MonitorWindow(MonitorWindowBase):
         self.charge_mode = 0    # Whether to Charge or Discharge: Charge (T) / Discharge (F)
         self.test_type = 0  # Fast Discharge (0) / Slow Discharge (1) / Charge EMF (2) / Discharge EMF (3)
         #                    / Charge Overpotential (4) / Discharge Overpotential (5) / Stop (6)
+        self.end_time = 0
+        self.test_config = None
 
-        self.target_voltage = 0
-        self.target_current = 0
-        self.target_resistance = 512
         self.supply_voltage = 0
         self.supply_current = 0
+        self.v1_bias = 0
+        self.v2_bias = 0
+        self.battery_capacity = 2200
         self.sink_current = 0
         self.min_test_voltage = 1.0
         self.max_test_voltage = 1.5
         self.target_resistor_bank = None
-        self.out_voltage = self.target_voltage
 
         self.shunt_resistance = 0.25
 
@@ -133,7 +134,6 @@ class MonitorWindow(MonitorWindowBase):
         if desired_resistance not in resistances:
             closest_resistance = min(resistances, key=lambda x: abs(x - desired_resistance))  # Find closest resistance to target
             self.target_resistance = closest_resistance
-            self.target_resistance_spinbox.setValue(self.target_resistance)     # Update UI to new value
             self.logger.debug("Target: " + str(round(desired_resistance, 3)) + " changed to nearest possible (" + str(round(closest_resistance, 3)) + " Ohms)")
 
     def set_min_frequency(self, frequency):
@@ -163,6 +163,18 @@ class MonitorWindow(MonitorWindowBase):
         self.target_resistor_bank = resistance
         self.logger.debug(f"Target resistance: {resistance:.2f} Ω")
 
+    def set_v1_bias(self, bias):
+        self.v1_bias = bias
+        self.logger.debug(f'V1 bias: {self.v1_bias}')
+
+    def set_v2_bias(self, bias):
+        self.v2_bias = bias
+        self.logger.debug(f'V2 bias: {self.v2_bias}')
+
+    def set_battery_capacity(self, capacity):
+        self.battery_capacity = capacity
+        self.logger.debug(f"Battery capacity: {self.battery_capacity:.0f} mAh")
+
     # GUI Actions
 
     def start_test_button(self):    # TODO: Add voltage check to make sure battery is connected before starting w/ minV
@@ -174,7 +186,6 @@ class MonitorWindow(MonitorWindowBase):
             self.logger.debug("Operator is busy")
             return
         else:
-            self.max_test_time = self.max_time_spinbox.value()
             if self.max_test_time > 0:
                 sleep(2.0)
                 self.buffer_time = np.array([])
@@ -189,13 +200,12 @@ class MonitorWindow(MonitorWindowBase):
                 # Disable UI Elements
                 self.start_button.setEnabled(False)
                 self.reset_button.setEnabled(False)
-                # self.charge_radiobutton.setEnabled(False)
-                # self.discharge_radiobutton.setEnabled(False)
-                self.target_selection_tabs.setEnabled(False)
-                # self.test_mode_tabs.setEnabled(False)
-                self.target_voltage_spinbox.setEnabled(False)
-                self.target_current_spinbox.setEnabled(False)
-                self.target_resistance_spinbox.setEnabled(False)
+                self.v1_bias_spinbox.setEnabled(False)
+                self.v2_bias_spinbox.setEnabled(False)
+                self.calibration_button.setEnabled(False)
+                self.battery_capacity_spinbox.setEnabled(False)
+                self.min_cell_voltage_spinbox.setEnabled(False)
+                self.max_cell_voltage_spinbox.setEnabled(False)
 
                 self.end_time = time() + (float(self.max_test_time) * 60)
                 self.out_voltage = self.operator.instrument.read_analog()[0]  # Start test at measured cell voltage
@@ -242,7 +252,9 @@ class MonitorWindow(MonitorWindowBase):
         self.test_selection = selection
         self.logger.debug('CV (0) / CC (1) / CR (2): ' + str(selection))
 
-    def set_test_mode(self, impedance_mode):
+    def set_test_mode(self, test_type):
+        self.test_type = test_type
+        self.logger.debug(f'Manually changed to mode {test_type}')
         return
         if impedance_mode:
             self.test_type = 2
@@ -317,6 +329,13 @@ class MonitorWindow(MonitorWindowBase):
 
     def save_test(self):
         """Save test to test config file. Currently will overwrite current opened test"""
+        self.test_config['test']['min_test_voltage'] = self.min_test_voltage
+        self.test_config['test']['max_test_voltage'] = self.max_test_voltage
+        self.test_config['test']['max_test_time'] = self.max_test_time
+        self.test_config['hardware']['shunt_resistance'] = self.shunt_resistance
+        self.test_config['hardware']['v1_bias'] = self.v1_bias
+        self.test_config['hardware']['v2_bias'] = self.v2_bias
+        self.test_config['hardware']['capacity'] = self.battery_capacity
         filename, file_type = QFileDialog.getSaveFileName(self, 'Save Test')
         with open(filename, 'w') as f:
             # TODO: update all self.test_config parameters here
@@ -359,39 +378,32 @@ class MonitorWindow(MonitorWindowBase):
         else:
             self.logger.warning("Supply current is out of range")
 
-
     # Custom Methods for Test Actions
 
     def update_parameters(self):
         """ Function for updating all test parameters """
         self.title.setText("FAIRBattery Testing Software - " + self.test_config['test_file'])
-        self.test_mode_tabs.setCurrentIndex(self.test_config['test']['test_mode'])
-        self.target_selection_tabs.setCurrentIndex(self.test_config['test']['test_selection'])
-        self.charge_radiobutton.setChecked(self.test_config['test']['charge_mode'])
-        self.discharge_radiobutton.setChecked(not self.test_config['test']['charge_mode'])
-        self.target_voltage_spinbox.setValue(self.test_config['test']['target_voltage'])
-        self.target_current_spinbox.setValue(self.test_config['test']['target_current'])
-        self.target_resistance_spinbox.setValue(self.test_config['test']['target_resistance'])
-        self.max_time_spinbox.setValue(self.test_config['test']['max_test_time'])
-        self.max_cell_voltage_spinbox.setValue(self.test_config['test']['max_test_voltage'])
         self.min_cell_voltage_spinbox.setValue(self.test_config['test']['min_test_voltage'])
-        self.max_current_spinbox.setValue(self.test_config['test']['max_current'])
-        self.flow_rate_spinbox.setValue(self.test_config['test']['flow_rate'])
+        self.max_cell_voltage_spinbox.setValue(self.test_config['test']['max_test_voltage'])
+        self.max_time_spinbox.setValue(self.test_config['test']['max_test_time'])
         self.shunt_resistance = self.test_config['hardware']['shunt_resistance']
         self.operator._set_monitor_time_step(self.test_config['test']['time_step'])
         self.operator._set_monitor_plot_points(self.test_config['test']['plot_points'])
-        self.v1_bias = self.test_config['hardware']['v1_bias']
-        self.v2_bias = self.test_config['hardware']['v2_bias']
+        self.v1_bias_spinbox.setValue(self.test_config['hardware']['v1_bias'])
+        self.v2_bias_spinbox.setValue(self.test_config['hardware']['v2_bias'])
+        self.battery_capacity_spinbox.setValue(self.test_config['hardware']['capacity'])
 
         self.logger.debug('Parameters Updated')
 
     def calibration_loop(self):
         self.start_button.setEnabled(False)
         self.reset_button.setEnabled(False)
-        self.target_selection_tabs.setEnabled(False)
-        self.target_voltage_spinbox.setEnabled(False)
-        self.target_current_spinbox.setEnabled(False)
-        self.target_resistance_spinbox.setEnabled(False)
+        self.v1_bias_spinbox.setEnabled(False)
+        self.v2_bias_spinbox.setEnabled(False)
+        self.calibration_button.setEnabled(False)
+        self.battery_capacity_spinbox.setEnabled(False)
+        self.min_cell_voltage_spinbox.setEnabled(False)
+        self.max_cell_voltage_spinbox.setEnabled(False)
 
         sleep(2.0)  # Settle voltages
         count = 1000
@@ -402,20 +414,17 @@ class MonitorWindow(MonitorWindowBase):
                 self.logger.debug(f"{i} / {count}")
             v1s[i], v2s[i] = self.operator.analog_in()
 
-        self.v1_bias = v1s.mean()
-        self.v2_bias = v2s.mean()
-
-        self.logger.debug(f"V1 bias: {self.v1_bias:.4f}, V2 bias: {self.v2_bias:.4f}")
-
-        self.v1_bias_lineedit.setText(f"{self.v1_bias:.3f}")
-        self.v2_bias_lineedit.setText(f"{self.v2_bias:.3f}")
+        self.v1_bias_spinbox.setValue(v1s.mean())
+        self.v2_bias_spinbox.setValue(v2s.mean())
 
         self.start_button.setEnabled(True)
         self.reset_button.setEnabled(True)
-        self.target_selection_tabs.setEnabled(True)
-        self.target_voltage_spinbox.setEnabled(True)
-        self.target_current_spinbox.setEnabled(True)
-        self.target_resistance_spinbox.setEnabled(True)
+        self.v1_bias_spinbox.setEnabled(True)
+        self.v2_bias_spinbox.setEnabled(True)
+        self.calibration_button.setEnabled(True)
+        self.battery_capacity_spinbox.setEnabled(True)
+        self.min_cell_voltage_spinbox.setEnabled(True)
+        self.max_cell_voltage_spinbox.setEnabled(True)
 
     def run_cv_charge_test(self, voltage, increment=0.01, margin=0):
         """
@@ -475,7 +484,6 @@ class MonitorWindow(MonitorWindowBase):
             self.operator.write_digital(1, pin)
 
     def configure_resistor_bank(self, resistance):
-        shunt = 0.25
         resistor_count = 7
         max_resistance = 128
 
@@ -484,7 +492,7 @@ class MonitorWindow(MonitorWindowBase):
                 self.operator.write_digital(0, pin)
             return None
 
-        bank_resistance = resistance - shunt
+        bank_resistance = resistance - self.shunt_resistance
         min_resistance = max_resistance / (1 << resistor_count)
         if bank_resistance >= min_resistance:
             conductivity = 1 / bank_resistance
@@ -512,10 +520,9 @@ class MonitorWindow(MonitorWindowBase):
     def resistor_bank_value(self):
         if self.resistor_bank_code == 0:
             return None
-        shunt = 0.25
         real_resistances = [129.3, 61.75, 32.9, 15.9, 8.16, 3.92, 1.99]
         pin_states = [(self.resistor_bank_code >> y) & 1 for y in range(7)]  # TODO make variable
-        closest_resistance = 1 / (sum([state * (1 / r) for state, r in zip(pin_states, real_resistances)])) + shunt
+        closest_resistance = 1 / (sum([state * (1 / r) for state, r in zip(pin_states, real_resistances)])) + self.shunt_resistance
         # self.logger.info(f"Set resistor bank to {closest_resistance:.2f} Ω")
         return closest_resistance
 
@@ -525,8 +532,6 @@ class MonitorWindow(MonitorWindowBase):
 
         self.operator.write_digital(state, 7)
         self.charge_mode = state
-        self.charge_radiobutton.setChecked(state)
-        self.discharge_radiobutton.setChecked(not state)
 
     def run_cc_discharge_test(self, current):   # TODO: Implement CC discharge
         pass
@@ -592,8 +597,7 @@ class MonitorWindow(MonitorWindowBase):
             self.current = (shunt_voltage / self.shunt_resistance) * 1000
             self.measured_current_lineedit.setText(f"{self.current:.2f}")
             time_elapsed = timedelta(seconds=runtime)
-
-            # TODO FIXME: Correct constant offset of each voltage channel
+            self.test_type_spinbox.setValue(self.test_type)
 
             timestr = str(time_elapsed).split('.')  # TODO: this section needs a one-liner
             if len(timestr) == 1:
@@ -607,8 +611,8 @@ class MonitorWindow(MonitorWindowBase):
             self.buffer_voltage = np.append(self.buffer_voltage, battery_voltage)
             self.buffer_current = np.append(self.buffer_current, self.current)
 
-            low_current = self.test_config['hardware']['capacity'] * 0.05
-            high_current = self.test_config['hardware']['capacity'] * 0.5
+            low_current = self.battery_capacity * 0.05
+            high_current = self.battery_capacity * 0.5
 
             def charging_mode(current):
                 self.supply_current = current
@@ -616,42 +620,42 @@ class MonitorWindow(MonitorWindowBase):
                 self.resistor_bank_lineedit.setText(f"Disabled")
                 self.switch_charge_discharge(1)
                 self.set_supply_current(self.supply_current)
-                sleep(0.5)
 
             def discharging_mode(current):
                 self.sink_current = current
                 self.cc_discharge_set_resistor_bank(self.sink_current)
-                self.resistor_bank_lineedit.setText(f"{self.resistor_bank_value()}")
+                self.resistor_bank_lineedit.setText(f"{self.resistor_bank_value():.2f}")
                 self.switch_charge_discharge(0)
                 self.set_supply_current(0)
-                sleep(0.5)
+
+            def change_test_type(test_type):
+                if self.test_type != test_type:
+                    self.test_type = test_type
+                    self.logger.info(f"Switching to mode {test_type}. Battery voltage is {battery_voltage:.2f} V")
+                    sleep(0.5)
 
             if self.test_type == 0 and battery_voltage > self.min_test_voltage:
                 discharging_mode(high_current)
-            if self.test_type == 0 and battery_voltage < self.min_test_voltage:
-                self.test_type = 1  # Slow Discharge
-                self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
+            if self.test_type == 1 or (self.test_type == 0 and battery_voltage < self.min_test_voltage):
                 discharging_mode(low_current)
-            if self.test_type == 1 and battery_voltage < self.min_test_voltage:
-                self.test_type = 2  # Charging EMF
-                self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
+                change_test_type(1)
+            if self.test_type == 2 or (self.test_type == 1 and battery_voltage < self.min_test_voltage):
                 charging_mode(low_current)
-            elif self.test_type == 2 and battery_voltage > self.max_test_voltage:
-                self.test_type = 3  # Discharging EMF
-                self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
+                change_test_type(2)
+            elif self.test_type == 3 or (self.test_type == 2 and battery_voltage > self.max_test_voltage):
                 discharging_mode(low_current)
-            elif self.test_type == 3 and battery_voltage < self.min_test_voltage:
-                self.test_type = 4  # Charging Overpotential
-                self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
+                change_test_type(3)
+            elif self.test_type == 4 or (self.test_type == 3 and battery_voltage < self.min_test_voltage):
                 charging_mode(high_current)
-            elif self.test_type == 4 and battery_voltage > self.max_test_voltage:
-                self.test_type = 5  # Discharging Overpotential
-                self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
+                change_test_type(4)
+            elif self.test_type == 5 or (self.test_type == 4 and battery_voltage > self.max_test_voltage):
                 discharging_mode(high_current)
-            elif self.test_type == 5 and battery_voltage < self.min_test_voltage:
+                change_test_type(5)
+            elif self.test_type == 6 or (self.test_type == 5 and battery_voltage < self.min_test_voltage):
+                if self.test_type == 5:
+                    self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
+                    self.logger.info(f"End of test. Disabling equipment")
                 self.test_type = 6  # Stop
-                self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
-                self.logger.info(f"End of test. Disabling equipment")
                 self.sink_current = 0
                 self.supply_current = 0
                 self.set_supply_current(0)
@@ -691,13 +695,13 @@ class MonitorWindow(MonitorWindowBase):
             # RE-Enable UI Elements
             self.start_button.setEnabled(True)
             self.reset_button.setEnabled(True)
-            self.charge_radiobutton.setEnabled(True)
-            self.discharge_radiobutton.setEnabled(True)
-            self.target_selection_tabs.setEnabled(True)
-            self.test_mode_tabs.setEnabled(True)
-            self.target_voltage_spinbox.setEnabled(True)
-            self.target_current_spinbox.setEnabled(True)
-            self.target_resistance_spinbox.setEnabled(True)
+            self.v1_bias_spinbox.setEnabled(True)
+            self.v2_bias_spinbox.setEnabled(True)
+            self.calibration_button.setEnabled(True)
+            self.battery_capacity_spinbox.setEnabled(True)
+            self.min_cell_voltage_spinbox.setEnabled(True)
+            self.max_cell_voltage_spinbox.setEnabled(True)
+
 
     def closeEvent(self, event):
         """ Gets called when the window is closed. Could be used to do some cleanup before closing. """

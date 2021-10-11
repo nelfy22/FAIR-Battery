@@ -1,22 +1,12 @@
-test_file:          "current_test_example.csv"
-
+test_file: overpotential.csv
 test:
-  test_mode:          0     # 0 = Charge/Discharge, 1 = Impedance Analysis
-  charge_mode:        False  # True = Charge, False = Discharge {Only applicable for mode 0 (Charge/Discharge)}
-  test_selection:     0     # 0 = CV, 1 = CC, 2 = CR
-  target_voltage:     0     # [V] Only applicable for mode 0 (CV)
-  target_current:     110    # [mA] Only applicable for mode 1 (CC)
-  target_resistance:  0     # [Ohms] Only applicable for mode 2 (CR)
-  max_test_time:      10000   # [minutes] Max test time
-  max_test_voltage:   1.5     # [V] Max cell voltage (0-4)
-  min_test_voltage:   1.0     # [V] Min cell voltage (0-4)
-  max_current:        660   # [mA] Max current
-  flow_rate:          45    # [lts/min] Flow rate of pump
-  time_step:          0.10  # [seconds] Note that the basic analog approach doesn't really go faster than 0.010 seconds
-  plot_points:        1100  # Number of points to plot in viewer
-
+  max_test_time: 10000.0
+  min_test_voltage: 1.0
+  max_test_voltage: 1.5
+  time_step: 0.1
+  plot_points: 1100
 hardware:
-  shunt_resistance: 0.25    # This is the resistance of the shunt resistor. Adjust this if the current reading is wrong
-  v1_bias: -0.0187
-  v2_bias: -0.0136
-  capacity: 800  # mAh
+  shunt_resistance: 0.25
+  v1_bias: 0.0
+  v2_bias: 0.0
+  capacity: 800
