@@ -73,6 +73,8 @@ class MonitorWindow(MonitorWindowBase):
         self.target_resistance = 512
         self.supply_voltage = 0
         self.supply_current = 0
+        self.v1_bias = 0
+        self.v2_bias = 0
         self.min_test_voltage = 1.0
         self.max_test_voltage = 1.5
         self.target_resistor_bank = None
