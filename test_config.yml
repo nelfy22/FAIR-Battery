@@ -1,8 +1,8 @@
-test_file:          "current_test_example.csv"
+test_file:          "test_data.csv"
 
 test:
   test_mode:          0     # 0 = Charge/Discharge, 1 = Impedance Analysis
-  charge_mode:        True  # True = Charge, False = Discharge {Only applicable for mode 0 (Charge/Discharge)}
+  charge_mode:        False  # True = Charge, False = Discharge {Only applicable for mode 0 (Charge/Discharge)}
   test_selection:     1     # 0 = CV, 1 = CC, 2 = CR
   target_voltage:     0     # [V] Only applicable for mode 0 (CV)
   target_current:     80    # [mA] Only applicable for mode 1 (CC)
@@ -17,3 +17,5 @@ test:
 
 hardware:
   shunt_resistance: 0.25    # This is the resistance of the shunt resistor. Adjust this if the current reading is wrong
+  v1_bias: -0.007
+  v2_bias: -0.011
