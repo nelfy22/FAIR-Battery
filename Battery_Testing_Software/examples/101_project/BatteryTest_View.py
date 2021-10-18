@@ -526,7 +526,6 @@ class MonitorWindow(MonitorWindowBase):
         # self.logger.info(f"Set resistor bank to {closest_resistance:.2f} Ω")
         return closest_resistance
 
-
     def switch_charge_discharge(self, state):
         # state: target (0: discharge, 1: charge)
 
@@ -617,7 +616,7 @@ class MonitorWindow(MonitorWindowBase):
             def charging_mode(current):
                 self.supply_current = current
                 self.configure_resistor_bank(None)
-                self.resistor_bank_lineedit.setText(f"Disabled")
+                self.resistor_bank_lineedit.setText("Disabled")
                 self.switch_charge_discharge(1)
                 self.set_supply_current(self.supply_current)
 
@@ -642,19 +641,19 @@ class MonitorWindow(MonitorWindowBase):
             if self.test_type == 2 or (self.test_type == 1 and battery_voltage < self.min_test_voltage):
                 charging_mode(low_current)
                 change_test_type(2)
-            elif self.test_type == 3 or (self.test_type == 2 and battery_voltage > self.max_test_voltage):
+            if self.test_type == 3 or (self.test_type == 2 and battery_voltage > self.max_test_voltage):
                 discharging_mode(low_current)
                 change_test_type(3)
-            elif self.test_type == 4 or (self.test_type == 3 and battery_voltage < self.min_test_voltage):
+            if self.test_type == 4 or (self.test_type == 3 and battery_voltage < self.min_test_voltage):
                 charging_mode(high_current)
                 change_test_type(4)
-            elif self.test_type == 5 or (self.test_type == 4 and battery_voltage > self.max_test_voltage):
+            if self.test_type == 5 or (self.test_type == 4 and battery_voltage > self.max_test_voltage):
                 discharging_mode(high_current)
                 change_test_type(5)
-            elif self.test_type == 6 or (self.test_type == 5 and battery_voltage < self.min_test_voltage):
+            if self.test_type == 6 or (self.test_type == 5 and battery_voltage < self.min_test_voltage):
                 if self.test_type == 5:
                     self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
-                    self.logger.info(f"End of test. Disabling equipment")
+                    self.logger.info("End of test. Disabling equipment")
                 self.test_type = 6  # Stop
                 self.sink_current = 0
                 self.supply_current = 0
