@@ -29,7 +29,6 @@ from Battery_Testing_Software.labphew.model.analog_discovery_2_model import Oper
 
 
 class MonitorWindow(MonitorWindowBase):
-
     def __init__(self, operator: Operator, parent=None):
         """
         Creates the monitor window.
@@ -626,23 +625,6 @@ class MonitorWindow(MonitorWindowBase):
                     self.logger.info(f"Switching to mode {test_type}. Battery voltage is {battery_voltage:.2f} V")
                     sleep(0.5)
 
-            if self.test_type == 0 and battery_voltage > self.min_test_voltage:
-                discharging_mode(high_current)
-            if self.test_type == 1 or (self.test_type == 0 and battery_voltage < self.min_test_voltage):
-                discharging_mode(low_current)
-                change_test_type(1)
-            if self.test_type == 2 or (self.test_type == 1 and battery_voltage < self.min_test_voltage):
-                charging_mode(low_current)
-                change_test_type(2)
-            if self.test_type == 3 or (self.test_type == 2 and battery_voltage > self.max_test_voltage):
-                discharging_mode(low_current)
-                change_test_type(3)
-            if self.test_type == 4 or (self.test_type == 3 and battery_voltage < self.min_test_voltage):
-                charging_mode(high_current)
-                change_test_type(4)
-            if self.test_type == 5 or (self.test_type == 4 and battery_voltage > self.max_test_voltage):
-                discharging_mode(high_current)
-                change_test_type(5)
             if self.test_type == 6 or (self.test_type == 5 and battery_voltage < self.min_test_voltage):
                 if self.test_type == 5:
                     self.logger.info(f"Switching to mode {self.test_type}. Battery voltage is {battery_voltage:.2f} V")
@@ -653,6 +635,23 @@ class MonitorWindow(MonitorWindowBase):
                 self.set_supply_current(0)
                 self.configure_resistor_bank(None)
                 self.switch_charge_discharge(0)
+            if self.test_type == 5 or (self.test_type == 4 and battery_voltage > self.max_test_voltage):
+                discharging_mode(high_current)
+                change_test_type(5)
+            if self.test_type == 4 or (self.test_type == 3 and battery_voltage < self.min_test_voltage):
+                charging_mode(high_current)
+                change_test_type(4)
+            if self.test_type == 3 or (self.test_type == 2 and battery_voltage > self.max_test_voltage):
+                discharging_mode(low_current)
+                change_test_type(3)
+            if self.test_type == 2 or (self.test_type == 1 and battery_voltage < self.min_test_voltage):
+                charging_mode(low_current)
+                change_test_type(2)
+            if self.test_type == 1 or (self.test_type == 0 and battery_voltage < self.min_test_voltage):
+                discharging_mode(low_current)
+                change_test_type(1)
+            if self.test_type == 0 and battery_voltage > self.min_test_voltage:
+                discharging_mode(high_current)
 
             self.charge_state_lineedit.setText(("Charging" if self.charge_mode == 1 else "Discharging") + f" (mode {self.test_type})")
 
@@ -693,7 +692,6 @@ class MonitorWindow(MonitorWindowBase):
             self.battery_capacity_spinbox.setEnabled(True)
             self.min_cell_voltage_spinbox.setEnabled(True)
             self.max_cell_voltage_spinbox.setEnabled(True)
-
 
     def closeEvent(self, event):
         """ Gets called when the window is closed. Could be used to do some cleanup before closing. """
