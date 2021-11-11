@@ -1,0 +1,835 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Variable Load"
+Date "2021-09-28"
+Rev "0.1"
+Comp "Sjoerd Seinhorst"
+Comment1 "Power resistors must handle 4 V and be fairly precise"
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Transistor_BJT:BC547 Q3
+U 1 1 61524B5D
+P 1650 2550
+F 0 "Q3" H 1841 2596 50  0000 L CNN
+F 1 "BC547" H 1841 2505 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 2475 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 2550 50  0001 L CNN
+	1    1650 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q2
+U 1 1 6152582F
+P 1650 1850
+F 0 "Q2" H 1841 1896 50  0000 L CNN
+F 1 "BC547" H 1841 1805 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 1775 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 1850 50  0001 L CNN
+	1    1650 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q1
+U 1 1 61526EA0
+P 1650 1150
+F 0 "Q1" H 1841 1196 50  0000 L CNN
+F 1 "BC547" H 1841 1105 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 1075 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 1150 50  0001 L CNN
+	1    1650 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 1150 1450 1150
+Wire Wire Line
+	1350 1850 1450 1850
+Wire Wire Line
+	1350 2550 1450 2550
+Wire Wire Line
+	1350 3250 1450 3250
+$Comp
+L Transistor_BJT:BC547 Q4
+U 1 1 6152403B
+P 1650 3250
+F 0 "Q4" H 1841 3296 50  0000 L CNN
+F 1 "BC547" H 1841 3205 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 3175 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 3250 50  0001 L CNN
+	1    1650 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR03
+U 1 1 6153008F
+P 1750 2750
+F 0 "#PWR03" H 1750 2500 50  0001 C CNN
+F 1 "GND" H 1755 2577 50  0000 C CNN
+F 2 "" H 1750 2750 50  0001 C CNN
+F 3 "" H 1750 2750 50  0001 C CNN
+	1    1750 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR02
+U 1 1 615307A7
+P 1750 2050
+F 0 "#PWR02" H 1750 1800 50  0001 C CNN
+F 1 "GND" H 1755 1877 50  0000 C CNN
+F 2 "" H 1750 2050 50  0001 C CNN
+F 3 "" H 1750 2050 50  0001 C CNN
+	1    1750 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 61530DB4
+P 1750 1350
+F 0 "#PWR01" H 1750 1100 50  0001 C CNN
+F 1 "GND" H 1755 1177 50  0000 C CNN
+F 2 "" H 1750 1350 50  0001 C CNN
+F 3 "" H 1750 1350 50  0001 C CNN
+	1    1750 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 6152FDF1
+P 1750 3450
+F 0 "#PWR04" H 1750 3200 50  0001 C CNN
+F 1 "GND" H 1755 3277 50  0000 C CNN
+F 2 "" H 1750 3450 50  0001 C CNN
+F 3 "" H 1750 3450 50  0001 C CNN
+	1    1750 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR05
+U 1 1 6152FB5F
+P 1750 4150
+F 0 "#PWR05" H 1750 3900 50  0001 C CNN
+F 1 "GND" H 1755 3977 50  0000 C CNN
+F 2 "" H 1750 4150 50  0001 C CNN
+F 3 "" H 1750 4150 50  0001 C CNN
+	1    1750 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR06
+U 1 1 6152BBC3
+P 1750 4850
+F 0 "#PWR06" H 1750 4600 50  0001 C CNN
+F 1 "GND" H 1755 4677 50  0000 C CNN
+F 2 "" H 1750 4850 50  0001 C CNN
+F 3 "" H 1750 4850 50  0001 C CNN
+	1    1750 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR07
+U 1 1 6152B76D
+P 1750 5550
+F 0 "#PWR07" H 1750 5300 50  0001 C CNN
+F 1 "GND" H 1755 5377 50  0000 C CNN
+F 2 "" H 1750 5550 50  0001 C CNN
+F 3 "" H 1750 5550 50  0001 C CNN
+	1    1750 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 5350 1450 5350
+Wire Wire Line
+	1350 4650 1450 4650
+Wire Wire Line
+	1350 3950 1450 3950
+$Comp
+L Transistor_BJT:BC547 Q5
+U 1 1 615235DA
+P 1650 3950
+F 0 "Q5" H 1841 3996 50  0000 L CNN
+F 1 "BC547" H 1841 3905 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 3875 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 3950 50  0001 L CNN
+	1    1650 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q6
+U 1 1 61522A39
+P 1650 4650
+F 0 "Q6" H 1841 4696 50  0000 L CNN
+F 1 "BC547" H 1841 4605 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 4575 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 4650 50  0001 L CNN
+	1    1650 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q7
+U 1 1 615222EE
+P 1650 5350
+F 0 "Q7" H 1841 5396 50  0000 L CNN
+F 1 "BC547" H 1841 5305 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 1850 5275 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 1650 5350 50  0001 L CNN
+	1    1650 5350
+	1    0    0    -1  
+$EndComp
+Text GLabel 900  5350 0    50   Input ~ 0
+BIT7
+Text GLabel 900  4650 0    50   Input ~ 0
+BIT6
+Text GLabel 900  3950 0    50   Input ~ 0
+BIT5
+Text GLabel 900  3250 0    50   Input ~ 0
+BIT4
+Text GLabel 900  2550 0    50   Input ~ 0
+BIT3
+Text GLabel 900  1850 0    50   Input ~ 0
+BIT2
+Text GLabel 900  1150 0    50   Input ~ 0
+BIT1
+Wire Wire Line
+	900  5350 1050 5350
+Wire Wire Line
+	900  4650 1050 4650
+Wire Wire Line
+	900  3950 1050 3950
+Wire Wire Line
+	900  3250 1050 3250
+Wire Wire Line
+	900  2550 1050 2550
+Wire Wire Line
+	900  1850 1050 1850
+Wire Wire Line
+	900  1150 1050 1150
+$Comp
+L power:+5V #PWR014
+U 1 1 61577719
+P 2000 5750
+F 0 "#PWR014" H 2000 5600 50  0001 C CNN
+F 1 "+5V" H 2015 5923 50  0000 C CNN
+F 2 "" H 2000 5750 50  0001 C CNN
+F 3 "" H 2000 5750 50  0001 C CNN
+	1    2000 5750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 5750 2600 5750
+$Comp
+L power:+5V #PWR013
+U 1 1 6157B403
+P 2000 5050
+F 0 "#PWR013" H 2000 4900 50  0001 C CNN
+F 1 "+5V" H 2015 5223 50  0000 C CNN
+F 2 "" H 2000 5050 50  0001 C CNN
+F 3 "" H 2000 5050 50  0001 C CNN
+	1    2000 5050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 5050 2600 5050
+$Comp
+L power:+5V #PWR012
+U 1 1 6157C08B
+P 2000 4350
+F 0 "#PWR012" H 2000 4200 50  0001 C CNN
+F 1 "+5V" H 2015 4523 50  0000 C CNN
+F 2 "" H 2000 4350 50  0001 C CNN
+F 3 "" H 2000 4350 50  0001 C CNN
+	1    2000 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 4350 2600 4350
+$Comp
+L power:+5V #PWR011
+U 1 1 6157D178
+P 2000 3650
+F 0 "#PWR011" H 2000 3500 50  0001 C CNN
+F 1 "+5V" H 2015 3823 50  0000 C CNN
+F 2 "" H 2000 3650 50  0001 C CNN
+F 3 "" H 2000 3650 50  0001 C CNN
+	1    2000 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 3650 2600 3650
+$Comp
+L power:+5V #PWR010
+U 1 1 6157E371
+P 2000 2950
+F 0 "#PWR010" H 2000 2800 50  0001 C CNN
+F 1 "+5V" H 2015 3123 50  0000 C CNN
+F 2 "" H 2000 2950 50  0001 C CNN
+F 3 "" H 2000 2950 50  0001 C CNN
+	1    2000 2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 2950 2600 2950
+$Comp
+L power:+5V #PWR09
+U 1 1 6157F51B
+P 2000 2250
+F 0 "#PWR09" H 2000 2100 50  0001 C CNN
+F 1 "+5V" H 2015 2423 50  0000 C CNN
+F 2 "" H 2000 2250 50  0001 C CNN
+F 3 "" H 2000 2250 50  0001 C CNN
+	1    2000 2250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 2250 2600 2250
+Text GLabel 3400 800  2    50   Input ~ 0
+R_IN
+Wire Wire Line
+	3300 5150 3000 5150
+Wire Wire Line
+	3000 4450 3300 4450
+Connection ~ 3300 4450
+Wire Wire Line
+	3300 4450 3300 5150
+Wire Wire Line
+	3000 3750 3300 3750
+Connection ~ 3300 3750
+Wire Wire Line
+	3300 3750 3300 4450
+Wire Wire Line
+	3000 3050 3300 3050
+Connection ~ 3300 3050
+Wire Wire Line
+	3300 3050 3300 3750
+Wire Wire Line
+	3000 2350 3300 2350
+Connection ~ 3300 2350
+Wire Wire Line
+	3300 2350 3300 3050
+Wire Wire Line
+	3000 1650 3300 1650
+Connection ~ 3300 1650
+Wire Wire Line
+	3300 1650 3300 2350
+Wire Wire Line
+	3000 950  3300 950 
+$Comp
+L power:+5V #PWR08
+U 1 1 6158203B
+P 2000 1550
+F 0 "#PWR08" H 2000 1400 50  0001 C CNN
+F 1 "+5V" H 2015 1723 50  0000 C CNN
+F 2 "" H 2000 1550 50  0001 C CNN
+F 3 "" H 2000 1550 50  0001 C CNN
+	1    2000 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 1550 2600 1550
+Wire Wire Line
+	1750 5150 2600 5150
+Wire Wire Line
+	1750 4450 2600 4450
+Wire Wire Line
+	1750 3750 2600 3750
+Wire Wire Line
+	1750 3050 2600 3050
+Wire Wire Line
+	1750 2350 2600 2350
+Wire Wire Line
+	1750 1650 2600 1650
+Wire Wire Line
+	1750 950  2600 950 
+Wire Wire Line
+	3400 800  3300 800 
+Wire Wire Line
+	3300 800  3300 950 
+Connection ~ 3300 950 
+$Comp
+L Device:R R14
+U 1 1 615D1E8A
+P 3600 5750
+F 0 "R14" V 3393 5750 50  0000 C CNN
+F 1 "2" V 3484 5750 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_Power_L48.0mm_W12.5mm_P55.88mm" V 3530 5750 50  0001 C CNN
+F 3 "~" H 3600 5750 50  0001 C CNN
+	1    3600 5750
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R13
+U 1 1 615D2F65
+P 3600 5050
+F 0 "R13" V 3393 5050 50  0000 C CNN
+F 1 "4" V 3484 5050 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_Power_L48.0mm_W12.5mm_P55.88mm" V 3530 5050 50  0001 C CNN
+F 3 "~" H 3600 5050 50  0001 C CNN
+	1    3600 5050
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R12
+U 1 1 615D3432
+P 3600 4350
+F 0 "R12" V 3393 4350 50  0000 C CNN
+F 1 "8" V 3484 4350 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_Power_L48.0mm_W12.5mm_P55.88mm" V 3530 4350 50  0001 C CNN
+F 3 "~" H 3600 4350 50  0001 C CNN
+	1    3600 4350
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R11
+U 1 1 615D3CDE
+P 3600 3650
+F 0 "R11" V 3393 3650 50  0000 C CNN
+F 1 "16" V 3484 3650 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_Power_L48.0mm_W12.5mm_P55.88mm" V 3530 3650 50  0001 C CNN
+F 3 "~" H 3600 3650 50  0001 C CNN
+	1    3600 3650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R10
+U 1 1 615D70B3
+P 3600 2950
+F 0 "R10" V 3393 2950 50  0000 C CNN
+F 1 "32" V 3484 2950 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal" V 3530 2950 50  0001 C CNN
+F 3 "~" H 3600 2950 50  0001 C CNN
+	1    3600 2950
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R9
+U 1 1 615D8044
+P 3600 2250
+F 0 "R9" V 3393 2250 50  0000 C CNN
+F 1 "64" V 3484 2250 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal" V 3530 2250 50  0001 C CNN
+F 3 "~" H 3600 2250 50  0001 C CNN
+	1    3600 2250
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R8
+U 1 1 615D87EE
+P 3600 1550
+F 0 "R8" V 3393 1550 50  0000 C CNN
+F 1 "128" V 3484 1550 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3530 1550 50  0001 C CNN
+F 3 "~" H 3600 1550 50  0001 C CNN
+	1    3600 1550
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3300 950  3300 1650
+Wire Wire Line
+	3100 1550 3450 1550
+Wire Wire Line
+	3100 2250 3450 2250
+Wire Wire Line
+	3100 2950 3450 2950
+Wire Wire Line
+	3100 3650 3450 3650
+Wire Wire Line
+	3100 4350 3450 4350
+Wire Wire Line
+	3100 5050 3450 5050
+Text GLabel 3800 950  0    50   Output ~ 0
+R_OUT
+Wire Wire Line
+	3800 950  3900 950 
+Wire Wire Line
+	3900 5750 3750 5750
+Wire Wire Line
+	3750 5050 3900 5050
+Connection ~ 3900 5050
+Wire Wire Line
+	3900 5050 3900 5750
+Wire Wire Line
+	3750 4350 3900 4350
+Connection ~ 3900 4350
+Wire Wire Line
+	3900 4350 3900 5050
+Wire Wire Line
+	3750 3650 3900 3650
+Connection ~ 3900 3650
+Wire Wire Line
+	3900 3650 3900 4350
+Wire Wire Line
+	3750 2950 3900 2950
+Connection ~ 3900 2950
+Wire Wire Line
+	3900 2950 3900 3650
+Wire Wire Line
+	3750 2250 3900 2250
+Wire Wire Line
+	3900 2250 3900 2950
+Connection ~ 3900 2250
+Wire Wire Line
+	3750 1550 3900 1550
+Wire Wire Line
+	3900 950  3900 1550
+Wire Wire Line
+	3900 1550 3900 2250
+Connection ~ 3900 1550
+$Comp
+L Device:R R7
+U 1 1 61527E2D
+P 1200 5350
+F 0 "R7" V 993 5350 50  0000 C CNN
+F 1 "25k" V 1084 5350 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 5350 50  0001 C CNN
+F 3 "~" H 1200 5350 50  0001 C CNN
+	1    1200 5350
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 61528A49
+P 1200 4650
+F 0 "R6" V 993 4650 50  0000 C CNN
+F 1 "25k" V 1084 4650 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 4650 50  0001 C CNN
+F 3 "~" H 1200 4650 50  0001 C CNN
+	1    1200 4650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 61529B18
+P 1200 3950
+F 0 "R5" V 993 3950 50  0000 C CNN
+F 1 "25k" V 1084 3950 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 3950 50  0001 C CNN
+F 3 "~" H 1200 3950 50  0001 C CNN
+	1    1200 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 61529D63
+P 1200 3250
+F 0 "R4" V 993 3250 50  0000 C CNN
+F 1 "25k" V 1084 3250 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 3250 50  0001 C CNN
+F 3 "~" H 1200 3250 50  0001 C CNN
+	1    1200 3250
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 61529FBE
+P 1200 2550
+F 0 "R3" V 993 2550 50  0000 C CNN
+F 1 "25k" V 1084 2550 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 2550 50  0001 C CNN
+F 3 "~" H 1200 2550 50  0001 C CNN
+	1    1200 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 6152A229
+P 1200 1850
+F 0 "R2" V 993 1850 50  0000 C CNN
+F 1 "25k" V 1084 1850 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 1850 50  0001 C CNN
+F 3 "~" H 1200 1850 50  0001 C CNN
+	1    1200 1850
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 6152A4A4
+P 1200 1150
+F 0 "R1" V 993 1150 50  0000 C CNN
+F 1 "25k" V 1084 1150 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 1130 1150 50  0001 C CNN
+F 3 "~" H 1200 1150 50  0001 C CNN
+	1    1200 1150
+	0    1    1    0   
+$EndComp
+Text Notes 2250 6350 0    50   ~ 0
+Parallel resistors\n1 - 128 Ohm\nStep size near 30 Ohm: 25%\nStep size near 1 Ohm: 0.79%\nCan be turned off\nCannot be short circuited
+$Comp
+L Relay:G5LE-1 K7
+U 1 1 61724182
+P 2800 5450
+F 0 "K7" H 2371 5404 50  0000 R CNN
+F 1 "G5LE-1" H 2371 5495 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 5400 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 5450 50  0001 C CNN
+	1    2800 5450
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	3100 5750 3450 5750
+$Comp
+L Relay:G5LE-1 K6
+U 1 1 6172660F
+P 2800 4750
+F 0 "K6" H 2371 4704 50  0000 R CNN
+F 1 "G5LE-1" H 2371 4795 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 4700 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 4750 50  0001 C CNN
+	1    2800 4750
+	1    0    0    1   
+$EndComp
+$Comp
+L Relay:G5LE-1 K5
+U 1 1 6172DF86
+P 2800 4050
+F 0 "K5" H 2371 4004 50  0000 R CNN
+F 1 "G5LE-1" H 2371 4095 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 4000 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 4050 50  0001 C CNN
+	1    2800 4050
+	1    0    0    1   
+$EndComp
+$Comp
+L Relay:G5LE-1 K4
+U 1 1 6172DF8C
+P 2800 3350
+F 0 "K4" H 2371 3304 50  0000 R CNN
+F 1 "G5LE-1" H 2371 3395 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 3300 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 3350 50  0001 C CNN
+	1    2800 3350
+	1    0    0    1   
+$EndComp
+$Comp
+L Relay:G5LE-1 K3
+U 1 1 6173656F
+P 2800 2650
+F 0 "K3" H 2371 2604 50  0000 R CNN
+F 1 "G5LE-1" H 2371 2695 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 2600 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 2650 50  0001 C CNN
+	1    2800 2650
+	1    0    0    1   
+$EndComp
+$Comp
+L Relay:G5LE-1 K2
+U 1 1 61736575
+P 2800 1950
+F 0 "K2" H 2371 1904 50  0000 R CNN
+F 1 "G5LE-1" H 2371 1995 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 1900 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 1950 50  0001 C CNN
+	1    2800 1950
+	1    0    0    1   
+$EndComp
+$Comp
+L Relay:G5LE-1 K1
+U 1 1 6173657B
+P 2800 1250
+F 0 "K1" H 2371 1204 50  0000 R CNN
+F 1 "G5LE-1" H 2371 1295 50  0000 R CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 3250 1200 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 2800 1250 50  0001 C CNN
+	1    2800 1250
+	1    0    0    1   
+$EndComp
+NoConn ~ 2900 5750
+NoConn ~ 2900 5050
+NoConn ~ 2900 4350
+NoConn ~ 2900 3650
+NoConn ~ 2900 2950
+NoConn ~ 2900 2250
+NoConn ~ 2900 1550
+$Comp
+L Relay:G5LE-1 K8
+U 1 1 61548F9D
+P 7800 3800
+F 0 "K8" V 7233 3800 50  0000 C CNN
+F 1 "G5LE-1" V 7324 3800 50  0000 C CNN
+F 2 "Relay_THT:Relay_SPDT_Omron-G5LE-1" H 8250 3750 50  0001 L CNN
+F 3 "http://www.omron.com/ecb/products/pdf/en-g5le.pdf" H 7800 3800 50  0001 C CNN
+	1    7800 3800
+	0    -1   1    0   
+$EndComp
+$Comp
+L Device:Battery_Cell BT1
+U 1 1 6154C2EB
+P 9050 4350
+F 0 "BT1" H 9168 4446 50  0000 L CNN
+F 1 "Battery_Cell" H 9168 4355 50  0000 L CNN
+F 2 "" V 9050 4410 50  0001 C CNN
+F 3 "~" V 9050 4410 50  0001 C CNN
+	1    9050 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Shunt R16
+U 1 1 6154DE2C
+P 8400 4000
+F 0 "R16" V 8175 4000 50  0000 C CNN
+F 1 "0.25" V 8266 4000 50  0000 C CNN
+F 2 "" V 8330 4000 50  0001 C CNN
+F 3 "~" H 8400 4000 50  0001 C CNN
+	1    8400 4000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8100 4000 8200 4000
+Wire Wire Line
+	8600 4000 9050 4000
+Wire Wire Line
+	9050 4000 9050 4150
+Wire Wire Line
+	9050 4450 9050 4650
+$Comp
+L Device:Voltmeter_DC MES1
+U 1 1 6155DE61
+P 8150 4450
+F 0 "MES1" H 8303 4496 50  0000 L CNN
+F 1 "V1" H 8303 4405 50  0000 L CNN
+F 2 "" V 8150 4550 50  0001 C CNN
+F 3 "~" V 8150 4550 50  0001 C CNN
+	1    8150 4450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Voltmeter_DC MES2
+U 1 1 6155EA0D
+P 8650 4450
+F 0 "MES2" H 8803 4496 50  0000 L CNN
+F 1 "V2" H 8803 4405 50  0000 L CNN
+F 2 "" V 8650 4550 50  0001 C CNN
+F 3 "~" V 8650 4550 50  0001 C CNN
+	1    8650 4450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9050 4650 8650 4650
+Wire Wire Line
+	8650 4650 8150 4650
+Connection ~ 8650 4650
+Connection ~ 8150 4650
+Wire Wire Line
+	8300 4150 8300 4200
+Wire Wire Line
+	8300 4200 8150 4200
+Wire Wire Line
+	8150 4200 8150 4250
+Wire Wire Line
+	8500 4150 8500 4200
+Wire Wire Line
+	8500 4200 8650 4200
+Wire Wire Line
+	8650 4200 8650 4250
+Text GLabel 7200 4650 0    50   Input ~ 0
+R_OUT
+Wire Wire Line
+	7400 3900 7500 3900
+Text GLabel 7400 3900 0    50   Output ~ 0
+R_IN
+Connection ~ 7300 4650
+Wire Wire Line
+	7200 4650 7300 4650
+Wire Wire Line
+	8150 4650 7300 4650
+Wire Wire Line
+	7300 4650 7300 4600
+$Comp
+L Simulation_SPICE:VDC V1
+U 1 1 61547D80
+P 7300 4400
+F 0 "V1" H 7430 4491 50  0000 L CNN
+F 1 "VDC" H 7430 4400 50  0000 L CNN
+F 2 "" H 7300 4400 50  0001 C CNN
+F 3 "~" H 7300 4400 50  0001 C CNN
+F 4 "Y" H 7300 4400 50  0001 L CNN "Spice_Netlist_Enabled"
+F 5 "V" H 7300 4400 50  0001 L CNN "Spice_Primitive"
+F 6 "dc(1)" H 7430 4309 50  0000 L CNN "Spice_Model"
+	1    7300 4400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7300 4200 7300 4100
+Wire Wire Line
+	7300 4100 7500 4100
+$Comp
+L Transistor_BJT:BC547 Q8
+U 1 1 615D095B
+P 7800 2800
+F 0 "Q8" V 8035 2800 50  0000 C CNN
+F 1 "BC547" V 8126 2800 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 8000 2725 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 7800 2800 50  0001 L CNN
+	1    7800 2800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8000 2900 8100 2900
+Wire Wire Line
+	8100 2900 8100 3600
+$Comp
+L Device:R R15
+U 1 1 615E7A4F
+P 7800 2350
+F 0 "R15" H 7870 2396 50  0000 L CNN
+F 1 "25k" H 7870 2305 50  0000 L CNN
+F 2 "" V 7730 2350 50  0001 C CNN
+F 3 "~" H 7800 2350 50  0001 C CNN
+	1    7800 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7800 2500 7800 2600
+Text GLabel 7800 2050 1    50   Input ~ 0
+CHARGE
+Wire Wire Line
+	7800 2050 7800 2200
+Wire Wire Line
+	7450 2900 7600 2900
+Wire Wire Line
+	7450 2950 7450 2900
+$Comp
+L power:GND #PWR0101
+U 1 1 615B82C4
+P 7450 2950
+F 0 "#PWR0101" H 7450 2700 50  0001 C CNN
+F 1 "GND" H 7455 2777 50  0000 C CNN
+F 2 "" H 7450 2950 50  0001 C CNN
+F 3 "" H 7450 2950 50  0001 C CNN
+	1    7450 2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7450 3600 7500 3600
+$Comp
+L power:+5V #PWR0102
+U 1 1 615B82CC
+P 7450 3500
+F 0 "#PWR0102" H 7450 3350 50  0001 C CNN
+F 1 "+5V" H 7465 3673 50  0000 C CNN
+F 2 "" H 7450 3500 50  0001 C CNN
+F 3 "" H 7450 3500 50  0001 C CNN
+	1    7450 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7450 3500 7450 3600
+Text Notes 4050 1550 0    50   ~ 0
+120+8.2
+Text Notes 4050 2250 0    50   ~ 0
+56+8.2\n
+Text Notes 4050 2950 0    50   ~ 0
+22+10
+Text Notes 4050 3650 0    50   ~ 0
+15+1
+Text Notes 4050 4350 0    50   ~ 0
+4.7+3.3
+Text Notes 4050 5050 0    50   ~ 0
+2.2+1.8
+Text Notes 4050 5750 0    50   ~ 0
+1+1
+$EndSCHEMATC
