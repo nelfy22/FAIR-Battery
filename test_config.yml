@@ -1,0 +1,13 @@
+test_file:           overpotential.csv  # Default data saving filepath
+test:
+  max_test_time:     10000.0  # [Minutes] After this time the test is automatically stopped
+  min_test_voltage:  1.0      # [V] The voltage where the battery is considered empty
+  max_test_voltage:  1.5      # [V] The voltage where the battery is considered full
+  time_step:         0.1      # [s] Time interval between measurements
+  plot_points:       1100     #     How many of the previous measurements to display on the graph
+
+hardware:
+  shunt_resistance:  0.25     # [Ohm] Resistance of the shunt that is used to measure the current
+  v1_bias:           0.0      # [V] Voltage error of first channel
+  v2_bias:           0.0      # [V] Voltage error of second channel
+  capacity:          800      # [mAh] The maximum capacity of the measured battery
